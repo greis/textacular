@@ -36,6 +36,10 @@ module Textacular
     similarities, conditions = fuzzy_similarities_and_conditions(parsed_query_hash)
     assemble_query(similarities, conditions, exclusive)
   end
+  
+  def search_order(rank)
+    "#{rank} DESC"
+  end   
 
   private
 
@@ -125,7 +129,7 @@ module Textacular
 
     select("#{quoted_table_name + '.*,' if select_values.empty?} #{similarities.join(" + ")} AS #{rank}").
       where(conditions.join(exclusive ? " AND " : " OR ")).
-      order("#{rank} DESC")
+      order(search_order(rank))
   end
 
   def select_values
